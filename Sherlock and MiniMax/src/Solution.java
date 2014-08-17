@@ -29,6 +29,12 @@ public class Solution {
 		Integer minDistance = null;
 		Integer lastNumber = null;
 		Integer toReturn = null;
+		
+		if (minBound < array.get(0)) {
+			minDistance = array.get(0) - minBound;
+			toReturn = minBound;
+		}
+		
 		for (Integer number : array) {
 			
 			if (lastNumber == null) {
@@ -45,6 +51,13 @@ public class Solution {
 				}
 				
 				lastNumber = number;
+			}
+		}
+		
+		if (maxBound > array.get(array.size() - 1)) {
+			if (maxBound - array.get(array.size() - 1) > minDistance) {
+				minDistance = maxBound - array.get(array.size() - 1);
+				toReturn = maxBound;
 			}
 		}
 		
