@@ -146,6 +146,8 @@ public class Randomness {
 					String newSubString = substitutedString.substring(start, end);
 					StartEndPair pair = new StartEndPair(start, end);
 					HashMap<StartEndPair, Integer> values = map.get(originalSubString);
+					StartEndPair newPair = new StartEndPair(0, 1);
+					values.get(newPair);
 					if (values.containsKey(pair)) {
 						values.remove(pair);
 						if (values.size() == 0) {
@@ -173,6 +175,7 @@ public class Randomness {
 				break;
 			}
 		}
+		originalString = substitutedString;
 		return distinctSubstringsCount;
 	}
 	
