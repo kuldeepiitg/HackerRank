@@ -43,19 +43,25 @@ public class Randomness {
 	/**
 	 * Map to store counts of instances of substrings.
 	 */
-	private Map<String, List<StartEndPair>> map = new HashMap<String, List<StartEndPair>>();
+	private HashMap<String, HashMap<StartEndPair, Integer>> map;
 
 	/**
 	 * Smallest length for which all substrings of original string are distinct.
 	 */
 	private int smallestLengthWithAllDistinctSubstrings;
 	
+	/**
+	 * Count of distinct substrings.
+	 */
+	private int distinctSubstringsCount;
+	
 	public Randomness(String originalString) {
 		super();
 		this.originalString = originalString;
-		this.map = new HashMap<String, List<StartEndPair>>();
+		this.map = new HashMap<String, HashMap<StartEndPair, Integer>>();
 		this.smallestLengthWithAllDistinctSubstrings = 0;
 		initializeMap();
+		this.distinctSubstringsCount = countDistinctSubstrings();
 	}
 
 	/**
@@ -75,14 +81,6 @@ public class Randomness {
 	}
 	
 	/**
-	 * @param length
-	 * @return max number of possible substrings.
-	 */
-	private int maxSubstringsCount(int length) {
-		return (originalString.length() - length + 1) * (originalString.length() - length) / 2;
-	}
-	
-	/**
 	 * Generate all substring of specified length.
 	 * @param length length of substrings.
 	 * @return 
@@ -92,12 +90,12 @@ public class Randomness {
 		for (int i = 0; i <= originalString.length() - length; i++) {
 			String subString = originalString.substring(i, i + length);
 			if (map.containsKey(subString)) {
-				List<StartEndPair> pairList = map.get(subString);
-				pairList.add(new StartEndPair(i, i+length));
-				map.put(subString, pairList);
+				HashMap<StartEndPair, Integer> pairMap = (HashMap<StartEndPair, Integer>) map.get(subString);
+				pairMap.put(new StartEndPair(i, i+length), 1);
+				map.put(subString, pairMap);
 			} else {
-				List<StartEndPair> values = new ArrayList<Randomness.StartEndPair>();
-				values.add(new StartEndPair(i, i+length));
+				HashMap<StartEndPair, Integer> values = new HashMap<Randomness.StartEndPair, Integer>();
+				values.put(new StartEndPair(i, i+length), 1);
 				map.put(subString, values);
 				totalDistinctSubstrings++;
 			}
@@ -115,6 +113,67 @@ public class Randomness {
 			totalDistinctSubstrings += originalString.length() - length + 1;
 		}
 		return totalDistinctSubstrings;
+	}
+	
+	/**
+	 * @param original original string
+	 * @param character new character to put
+	 * @param index position where substitution is to be made
+	 * @return newly formed string
+	 */
+	private String substitute(String original, char character, int index) {
+		return original.substring(0, index) + character + original.substring(index);
+	}
+	
+	/**
+	 * TODO: 
+	 * @param position replace character at specified position be new character.
+	 * @param newCharacter new character to be substituted.
+	 * @return the count of distinct substrings.
+	 */
+	public int replaceCharacter (int position, char newCharacter) {
+		
+		String substitutedString = substitute(originalString, newCharacter, position);
+		
+		for (int length = 1; length <= originalString.length(); length++) {
+			
+			int maximumPossibleCount = length;
+			int totalDistinctSubstringsCount = 0;
+			for (int start = position - length + 1; start <= position; start++) {
+				int end = start+length;
+				if (start >= 0 && end <= originalString.length()) {
+					String originalSubString = originalString.substring(start, end);
+					String newSubString = substitutedString.substring(start, end);
+					StartEndPair pair = new StartEndPair(start, end);
+					HashMap<StartEndPair, Integer> values = map.get(originalSubString);
+					if (values.containsKey(pair)) {
+						values.remove(pair);
+						if (values.size() == 0) {
+							map.remove(originalSubString);
+							distinctSubstringsCount--;
+						}
+					}
+					
+					if (map.containsKey(newSubString)) {
+						values = map.get(newSubString);
+						values.put(pair, 1);
+					} else {
+						values = new HashMap<Randomness.StartEndPair, Integer>();
+						values.put(new StartEndPair(start, end), 1);
+						map.put(newSubString, values);
+						distinctSubstringsCount++;
+						totalDistinctSubstringsCount++;
+					}
+				} else {
+					maximumPossibleCount--;
+				}
+			}
+			if (totalDistinctSubstringsCount == maximumPossibleCount) {
+				smallestLengthWithAllDistinctSubstrings = length;
+				break;
+			}
+		}
+		return distinctSubstringsCount;
 	}
 	
 	/**

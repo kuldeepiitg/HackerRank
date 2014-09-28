@@ -19,6 +19,10 @@ public class RandomnessTest {
 		int count = randomness.countDistinctSubstrings();
 		System.out.println(count);
 		
+		int position = in.nextInt();
+		char newCharacter = in.next().charAt(0);
+		int newCount = randomness.replaceCharacter(position, newCharacter);
+		System.out.println(newCount);
 	}
 
 }
