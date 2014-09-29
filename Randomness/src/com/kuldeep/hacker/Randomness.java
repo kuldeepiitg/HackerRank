@@ -146,8 +146,6 @@ public class Randomness {
 					String newSubString = substitutedString.substring(start, end);
 					StartEndPair pair = new StartEndPair(start, end);
 					HashMap<StartEndPair, Integer> values = map.get(originalSubString);
-					StartEndPair newPair = new StartEndPair(0, 1);
-					values.get(newPair);
 					if (values.containsKey(pair)) {
 						values.remove(pair);
 						if (values.size() == 0) {
@@ -212,6 +210,44 @@ public class Randomness {
 		 */
 		public int getEnd() {
 			return end;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + end;
+			result = prime * result + start;
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			StartEndPair other = (StartEndPair) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (end != other.end)
+				return false;
+			if (start != other.start)
+				return false;
+			return true;
+		}
+
+		private Randomness getOuterType() {
+			return Randomness.this;
 		}
 	}
 }
