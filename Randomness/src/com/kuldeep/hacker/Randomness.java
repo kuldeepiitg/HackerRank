@@ -122,7 +122,7 @@ public class Randomness {
 	 * @return newly formed string
 	 */
 	private String substitute(String original, char character, int index) {
-		return original.substring(0, index) + character + original.substring(index);
+		return original.substring(0, index) + character + original.substring(index + 1);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class Randomness {
 					maximumPossibleCount--;
 				}
 			}
-			if (totalDistinctSubstringsCount == maximumPossibleCount) {
+			if (totalDistinctSubstringsCount == maximumPossibleCount && totalDistinctSubstringsCount > 1) {
 				smallestLengthWithAllDistinctSubstrings = length;
 				break;
 			}
