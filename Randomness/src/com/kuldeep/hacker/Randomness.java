@@ -130,8 +130,15 @@ public class Randomness {
 		
 		int totalRemoved = 0;
 		for (int length = 1; length <= smallestLengthWithAllDistinctSubstrings; length++) {
-			for (int start = (position - length + 1 > 0 ? position - length + 1 :  0); start < position; start++) {
-				int end = (start + length <= originalString.length() ? start + length : originalString.length());
+			for (int start = (position - length + 1 > 0 ? position - length + 1 :  0); start <= position; start++) {
+				int end;
+				
+				if (start + length <= originalString.length()) {
+					end = start + length;
+				} else {
+					break;
+				}
+				
 				String substring = originalString.substring(start, end);
 				Integer count = map.get(substring);
 				if (count == 1) {
@@ -157,8 +164,15 @@ public class Randomness {
 		boolean allStringsDistinct = true;
 		for (int length = 1; length <= smallestLengthWithAllDistinctSubstrings; length++) {
 			allStringsDistinct = true;
-			for (int start = position - length + 1 > 0 ? position - length + 1 : 0; start < position; start++) {
-				int end = (start + length <= originalString.length() ? start + length : originalString.length());
+			for (int start = position - length + 1 > 0 ? position - length + 1 : 0; start <= position; start++) {
+				
+				int end;
+				if (start + length <= originalString.length()) {
+					end = start + length;
+				} else {
+					break;
+				}
+				
 				String substring = originalString.substring(start, end);
 				if (map.containsKey(substring)) {
 					int count = map.get(substring);
