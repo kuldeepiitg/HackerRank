@@ -43,7 +43,7 @@ public class Randomness {
 	/**
 	 * Map to store counts of instances of substrings.
 	 */
-	private HashMap<String, HashMap<StartEndPair, Integer>> map;
+	private HashMap<String, Integer> map;
 
 	/**
 	 * Smallest length for which all substrings of original string are distinct.
@@ -58,7 +58,7 @@ public class Randomness {
 	public Randomness(String originalString) {
 		super();
 		this.originalString = originalString;
-		this.map = new HashMap<String, HashMap<StartEndPair, Integer>>();
+		this.map = new HashMap<String, Integer>();
 		this.smallestLengthWithAllDistinctSubstrings = 0;
 		initializeMap();
 		this.distinctSubstringsCount = countDistinctSubstrings();
@@ -90,13 +90,10 @@ public class Randomness {
 		for (int i = 0; i <= originalString.length() - length; i++) {
 			String subString = originalString.substring(i, i + length);
 			if (map.containsKey(subString)) {
-				HashMap<StartEndPair, Integer> pairMap = (HashMap<StartEndPair, Integer>) map.get(subString);
-				pairMap.put(new StartEndPair(i, i+length), 1);
-				map.put(subString, pairMap);
+				Integer count = map.get(subString);
+				map.put(subString, count+1);
 			} else {
-				HashMap<StartEndPair, Integer> values = new HashMap<Randomness.StartEndPair, Integer>();
-				values.put(new StartEndPair(i, i+length), 1);
-				map.put(subString, values);
+				map.put(subString, 1);
 				totalDistinctSubstrings++;
 			}
 		}
@@ -126,54 +123,81 @@ public class Randomness {
 	}
 	
 	/**
-	 * TODO: 
-	 * @param position replace character at specified position be new character.
-	 * @param newCharacter new character to be substituted.
-	 * @return the count of distinct substrings.
+	 * @param position position in string where character is to be removed.
+	 * @return count of substrings that have been removed from map.
 	 */
-	public int replaceCharacter (int position, char newCharacter) {
+	private int removeCharacter(int position) {
 		
-		String substitutedString = substitute(originalString, newCharacter, position);
-		
-		for (int length = 1; length <= originalString.length(); length++) {
-			
-			int maximumPossibleCount = length;
-			int totalDistinctSubstringsCount = 0;
-			for (int start = position - length + 1; start <= position; start++) {
-				int end = start+length;
-				if (start >= 0 && end <= originalString.length()) {
-					String originalSubString = originalString.substring(start, end);
-					String newSubString = substitutedString.substring(start, end);
-					StartEndPair pair = new StartEndPair(start, end);
-					HashMap<StartEndPair, Integer> values = map.get(originalSubString);
-					if (values.containsKey(pair)) {
-						values.remove(pair);
-						if (values.size() == 0) {
-							map.remove(originalSubString);
-							distinctSubstringsCount--;
-						}
-					}
-					
-					if (map.containsKey(newSubString)) {
-						values = map.get(newSubString);
-						values.put(pair, 1);
-					} else {
-						values = new HashMap<Randomness.StartEndPair, Integer>();
-						values.put(new StartEndPair(start, end), 1);
-						map.put(newSubString, values);
-						distinctSubstringsCount++;
-						totalDistinctSubstringsCount++;
-					}
+		int totalRemoved = 0;
+		for (int length = 1; length <= smallestLengthWithAllDistinctSubstrings; length++) {
+			for (int start = (position - length + 1 > 0 ? position - length + 1 :  0); start < position; start++) {
+				int end = (start + length <= originalString.length() ? start + length : originalString.length());
+				String substring = originalString.substring(start, end);
+				Integer count = map.get(substring);
+				if (count == 1) {
+					map.remove(substring);
+					totalRemoved++;
 				} else {
-					maximumPossibleCount--;
+					map.put(substring, count - 1);
 				}
 			}
-			if (totalDistinctSubstringsCount == maximumPossibleCount && totalDistinctSubstringsCount > 1) {
-				smallestLengthWithAllDistinctSubstrings = length;
-				break;
+		}
+		return totalRemoved;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @param character
+	 * @return
+	 */
+	private int putCharacter(int position, char character) {
+		originalString = substitute(originalString, character, position);
+		int totalAdded = 0;
+		boolean allStringsDistinct = true;
+		for (int length = 1; length <= smallestLengthWithAllDistinctSubstrings; length++) {
+			allStringsDistinct = true;
+			for (int start = position - length + 1 > 0 ? position - length + 1 : 0; start < position; start++) {
+				int end = (start + length <= originalString.length() ? start + length : originalString.length());
+				String substring = originalString.substring(start, end);
+				if (map.containsKey(substring)) {
+					int count = map.get(substring);
+					map.put(substring, count+1);
+					allStringsDistinct = false;
+				} else {
+					map.put(substring, 1);
+					totalAdded++;
+				}
 			}
 		}
-		originalString = substitutedString;
+		if (!allStringsDistinct) {
+			addOneMoreLayerInMap();
+		}
+		return totalAdded;
+	}
+	
+	/**
+	 * Add one more layer in map.
+	 * @return total elements added
+	 */
+	private int addOneMoreLayerInMap() {
+		smallestLengthWithAllDistinctSubstrings++;
+		for (int start = 0; start <= originalString.length() - smallestLengthWithAllDistinctSubstrings; start++) {
+			String substring = originalString.substring(start, start + smallestLengthWithAllDistinctSubstrings);
+			map.put(substring, 1);
+		}
+		return originalString.length() - smallestLengthWithAllDistinctSubstrings + 1;
+	}
+	
+	/**
+	 * Replace a character with new.
+	 * @param position
+	 * @param character
+	 * @return
+	 */
+	public int replaceCharacter(int position, char character) {
+		distinctSubstringsCount -= removeCharacter(position);
+		distinctSubstringsCount += putCharacter(position, character);
 		return distinctSubstringsCount;
 	}
 	
