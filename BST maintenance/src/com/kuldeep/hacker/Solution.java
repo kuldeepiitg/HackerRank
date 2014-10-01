@@ -1,5 +1,7 @@
 package com.kuldeep.hacker;
 
+import java.util.Scanner;
+
 /**
  * Consider a binary search tree T which is initially empty. 
  * Also, consider the first N positive integers {1, 2, 3, 4, 5, ....., N} 
@@ -24,35 +26,29 @@ package com.kuldeep.hacker;
  * @author kuldeep
  *
  */
-public class BinarySearchTree {
+public class Solution {
 
 	/**
 	 * Sum of distance between every two node in tree.
 	 */
-	private long cummulativeInterNodeDistance;
+	private static long cummulativeInterNodeDistance;
 	
 	/**
 	 * The root node.
 	 */
-	private Node root;
+	private static Node root;
 	
 	/**
 	 * Total nodes seen by element to be inserted.
 	 */
-	private int nodesCount;
+	private static int nodesCount;
 	
-	public BinarySearchTree() {
-		super();
-		this.cummulativeInterNodeDistance = 0;
-		this.nodesCount = 0;
-	}
-
 	/**
 	 * Insert value in BST.
 	 * @param value
 	 * @return cumulativeInterNodeDistance
 	 */
-	public long insert(int value) {
+	public static long insert(int value) {
 		nodesCount = 0;
 		Node node = new Node(value);
 		if (root == null) {
@@ -63,13 +59,25 @@ public class BinarySearchTree {
 		return cummulativeInterNodeDistance;
 	}
 	
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+		int numberOfInputs = in.nextInt();
+		
+		for (int i = 0; i < numberOfInputs; i++) {
+			int value = in.nextInt();
+			long output = insert(value);
+			System.out.println(output);
+		}
+	}
+
 	/**
 	 * Binary search tree node.
 	 * 
 	 * @author kuldeep
 	 *
 	 */
-	private class Node {
+	private static class Node {
 		/**
 		 * Face value of node.
 		 */
@@ -88,12 +96,12 @@ public class BinarySearchTree {
 		/**
 		 * Sum of distance of every left children to this node.
 		 */
-		private int cummulativeDistanceOfLeftChildren;
+		private long cummulativeDistanceOfLeftChildren;
 		
 		/**
 		 * Sum of distance of every right children to this node.
 		 */
-		private int cummulativeDistanceOfRightChildren;
+		private long cummulativeDistanceOfRightChildren;
 
 		/**
 		 * Node in left.

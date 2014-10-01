@@ -3,6 +3,30 @@ package com.kuldeep.hacker;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * You're given a string S of N characters. It's known that the string consists of lowercase latin letters. 
+ * The string is generated randomly. That means that every symbol is chosen randomly and independently
+ * from others from the set {'a', 'b', ..., 'z'}. All the letters has equal probability to appear.
+ * You're given Q queries on this string. Each query is of the form P C, where P is an integer 
+ * between 1 and N (both inclusive) and C is a character from the set {'a', 'b', ..., 'z'}. 
+ * Both P and C were chosen at random and independently from other queries.
+ * When you have a query of the form P C you have to change the Pth symbol of S to C. 
+ * After every change we ask you to output the number of distinct nonempty sub-strings of S.
+ * 
+ * 
+ * https://www.hackerrank.com/challenges/randomness
+ * 
+ * @author kuldeep
+ * 
+ * @algorithm 
+ * 			If all the substrings of length x are distinct then substrings of length x+1 must also be distinct.
+ * 	So go on making sets of substrings of length of 1,2,3 ... x such that x is smallest number and set of substrings 
+ * of length x are distinct. Calculate how many distinct substrings have been generated for set S1, S2, S3 ... Sx cumulatively.
+ * And all sets with larger size substrings will have no duplicates so number of substrings in such set of length 'm' is
+ * |Sm| = [n-(m-1)][{n-(m-1)}-1]/2
+ * 			= [n-m+1][n-m]/2,
+ * 						where n is length of original string.
+ */
 public class Solution {
 	
 	/**
@@ -199,7 +223,5 @@ public class Solution {
 			long newCount = replaceCharacter(position - 1, newCharacter);
 			System.out.println(newCount);
 		}
-		
 	}
-
 }
