@@ -27,7 +27,7 @@ package com.hacker.kuldeep;
 public class BalanceInMinSwaps {
 
 	/**
-	 * Generate a balanced parenthesis 
+	 * Generate balanced parenthesis.
 	 * 
 	 * @param unbalanced string containing unbalanced parentheses.
 	 * @return balanced parentheses string.
