@@ -1,6 +1,5 @@
 package com.hacker.kuldeep;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -23,14 +22,8 @@ public class AscendingTripletsFinder {
 	 */
 	private int[] array;
 	
-	/**
-	 * Hash map to contain triplets and counts.
-	 */
-	private HashMap<Triplet, Integer> map;
-	
 	public AscendingTripletsFinder(int[] array) {
 		this.array = array;
-		map = new HashMap<AscendingTripletsFinder.Triplet, Integer>();
 	}
 	
 	/**
@@ -39,62 +32,38 @@ public class AscendingTripletsFinder {
 	 * 
 	 * @param midIndex index of middle element 
 	 * of triplets to be found.
+	 * @return 
 	 */
-	private void putTriplets(int midIndex) {
+	private int triplets(int midIndex) {
 		
+		HashMap<Integer, Integer> smaller = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> larger = new HashMap<Integer, Integer>();
 		
+		int i;
+		for (i = 0; i < midIndex; i++) {
+			
+			if (array[i] < array[midIndex] && !smaller.containsKey(array[i])) {
+				smaller.put(array[i], 1);
+			}
+		}
+		
+		i++;
+		for ( ; i < array.length; i++) {
+			if (array[i] > array[midIndex] && !larger.containsKey(array[i])) {
+				larger.put(array[i], 1);
+			}
+		}
+		return smaller.size() * larger.size();
 	}
 	
 	/**
-	 * The triplet
-	 * 
-	 * @author kuldeep
+	 * @return total number of triplets.
 	 */
-	private class Triplet {
-		
-		/**
-		 * Triplets elements.
-		 */
-		int[] elements;
-
-		public Triplet(int first, int second, int third) {
-			super();
-			this.elements = new int[]{first,second,third};
+	public int triplets() {
+		int totalTriplets = 0;
+		for (int i = 0; i < array.length; i++) {
+			totalTriplets += triplets(i);
 		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + Arrays.hashCode(elements);
-			return result;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Triplet other = (Triplet) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (!Arrays.equals(elements, other.elements))
-				return false;
-			return true;
-		}
-
-		private AscendingTripletsFinder getOuterType() {
-			return AscendingTripletsFinder.this;
-		}
+		return totalTriplets;
 	}
 }
