@@ -22,6 +22,13 @@ public class AscendingTripletsFinder {
 	 */
 	private int[] array;
 	
+	/**
+	 * Hashmap to keep 
+	 */
+	private HashMap<Integer, HashMap<Integer, Integer>> smallerNumbers;
+	
+	private HashMap<Integer, HashMap<Integer, Integer>> largerNumbers;
+	
 	public AscendingTripletsFinder(int[] array) {
 		this.array = array;
 	}
@@ -36,8 +43,8 @@ public class AscendingTripletsFinder {
 	 */
 	private int triplets(int midIndex) {
 		
-		HashMap<Integer, Integer> smaller = new HashMap<Integer, Integer>();
-		HashMap<Integer, Integer> larger = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> smaller = smallerNumbers.get(array[midIndex]);
+		HashMap<Integer, Integer> larger = largerNumbers.get(array[midIndex]);
 		
 		int i;
 		for (i = 0; i < midIndex; i++) {
@@ -53,6 +60,9 @@ public class AscendingTripletsFinder {
 				larger.put(array[i], 1);
 			}
 		}
+		smallerNumbers.put(array[midIndex], smaller);
+		largerNumbers.put(array[midIndex], larger);
+		
 		return smaller.size() * larger.size();
 	}
 	
