@@ -16,18 +16,11 @@ public class AscendingTripletsFinderTest {
 	@Test
 	public void testTriplets() {
 		
-		Scanner in = new Scanner(System.in);
-		int numberOfInputs = in.nextInt();
-		
-		int[] array = new int[numberOfInputs];
-		
-		for (int i = 0; i < numberOfInputs; i++) {
-			array[i] = in.nextInt();
-		}
+		int[] array = new int[]{1, 1, 2, 2, 3, 4};
 		
 		AscendingTripletsFinder tripletsFinder = new AscendingTripletsFinder(array);
 		int count = tripletsFinder.triplets();
-		System.out.println(count);
+		assertEquals(4, count);
 	}
 
 }
