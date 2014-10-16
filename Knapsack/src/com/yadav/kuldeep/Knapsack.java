@@ -12,7 +12,7 @@ public class Knapsack {
 	/**
 	 * Collection of objects.
 	 */
-	private Object[] objects;
+	private Article[] objects;
 	
 	/**
 	 * Maximum limit of weights that a chosen collection of object is allowed to have.
@@ -24,7 +24,7 @@ public class Knapsack {
 	 */
 	private int[][] table;
 	
-	public Knapsack(Object[] objects, int weightLimit) {
+	public Knapsack(Article[] objects, int weightLimit) {
 		super();
 		this.objects = objects;
 		this.weightLimit = weightLimit;
@@ -71,7 +71,7 @@ public class Knapsack {
 	 * 
 	 * @author kuldeep
 	 */
-	private class Object {
+	public class Article {
 		
 		/**
 		 * Value of object.
@@ -82,5 +82,22 @@ public class Knapsack {
 		 * Weight of object.
 		 */
 		private int weight;
+
+		public void setValue(int value) {
+			this.value = value;
+		}
+
+		public void setWeight(int weight) {
+			this.weight = weight;
+		}
+		
+		/**
+		 * @param weight
+		 * @param value
+		 */
+		public void set(int weight, int value) {
+			this.weight = weight;
+			this.value = value;
+		}
 	}
 }
