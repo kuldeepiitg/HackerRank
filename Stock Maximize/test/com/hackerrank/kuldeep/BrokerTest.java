@@ -15,9 +15,12 @@ public class BrokerTest {
 	public void testMaximize() {
 		
 		int[] priceList = new int[] {1, 3, 1, 2};
-		Broker broker = new Broker(priceList);
-		int profit = broker.maximize();
+		Broker broker = new Broker();
+		int profit = broker.maximize(priceList);
 		assertEquals(3, profit);
+		
+		
+		
 	}
 
 }
