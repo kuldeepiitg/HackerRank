@@ -26,10 +26,10 @@ public class Broker {
 	/**
 	 * @return maximum profit that can be earned.
 	 */
-	public int maximize(int[] priceList) {
+	public long maximize(int[] priceList) {
 		
 		int maxSeenPrice = Integer.MIN_VALUE;
-		int totalProfit = 0;
+		long totalProfit = 0;
 		for (int i = priceList.length - 1; i >= 0; i--) {
 			if (priceList[i] < maxSeenPrice) {
 				totalProfit += maxSeenPrice - priceList[i];
